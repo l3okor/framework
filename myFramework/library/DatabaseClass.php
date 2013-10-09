@@ -204,32 +204,128 @@ class DatabaseClass extends PDO
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+// 	private function _buildQuery()
+// 	{
+// 		$this->query .=' * ';
+// 		$this->query .=' FROM ' . $this->table;
+// 		if (!empty($this->where))
+// 		{
+// 			foreach ($this->where as $where)
+// 			{
+// 				$this->whereValue = $where[1];
+// 				$whereClause[] = $where[0];
+// 			}
+// 			$this->query .=' WHERE ' . implode(' AND ', $whereClause);
+// 		}
+
+// 		if (!empty($this->group))
+// 		{
+// 			$this->query .= ' GROUP BY ' . implode(', ', $this->group);
+// 		}
+
+// 		if (!empty($this->order))
+// 		{
+// 			$this->query .= ' ORDER BY ' . $this->order;
+// 		}
+
+// 		return $this->query;
+
+// 	}
+
 	private function _buildQuery()
 	{
-		$this->query .=' * ';
-		$this->query .=' FROM ' . $this->table;
-		if (!empty($this->where))
+
+		//colums
+		if(empty($this->colums))
+		{
+			$this->query .= ' * ';
+		}
+		else
+		{
+
+			//select columns
+			$tmpColums = array();
+			$match = '';
+			foreach ($this->colums as $key => $value)
+			{
+				$tmpColums[] = $this->_validateColum($this->table,$value,$key);
+
+			}
+
+			//add columns from join
+			if (!empty($this->joins))
+			{
+				foreach ($this->joins as $join)
+				{
+					if(!empty($join['cols']))
+					{
+						foreach ($join['cols'] as $key => $value)
+							$tmpColums[] = $this->_validateColum($join['table'],$value,$key);
+					}
+				}
+			}
+
+			$this->query .= ' ' . implode(', ', $tmpColums);
+		}
+		//table
+
+		$this->query .= ' FROM ' . $this->table;
+
+		//join Left and Right
+
+		if (!empty($this->joins))
+		{//var_dump($this->joins);
+			foreach ($this->joins as $join)
+			{
+				$this->query .= ' ' .$join['type'] . ' JOIN ' . $join['table'] . ' ' . ' ON ' . $join['clause'];
+			}
+		}
+
+		//wheres
+
+		if(!empty($this->where))
 		{
 			foreach ($this->where as $where)
 			{
-				$this->whereValue = $where[1];
-				$whereClause[] = $where[0];
+				$this->whereValuesArray[] = $where[1];
+				$whereClauseArray[] = $where[0];
 			}
-			$this->query .=' WHERE ' . implode(' AND ', $whereClause);
+			$this->query .= ' WHERE ' . implode(' AND ', $whereClauseArray);
 		}
+
+
+		//or wheres
+
+		//group
 
 		if (!empty($this->group))
 		{
-			$this->query .= ' GROUP BY ' . implode(', ', $this->group);
-		}
+			foreach ($this->group as $group)
+			{
+				$tmpGroup[] = $this->_validateColum($this->table,$group);
+			}
 
-		if (!empty($this->order))
+			$this->query .= ' GROUP BY ' . implode(', ', $tmpGroup);
+		}
+		//order
+
+		if(!empty($this->order))
 		{
-			$this->query .= ' ORDER BY ' . $this->order;
+			if(is_array($this->order[0]))
+			{
+				foreach ($this->order[0] as $col)
+				{
+					$tmpOrder = $this->_validateColum($this->table,$col);
+				}
+				$this->query .= ' ORDER BY ' . implode(',',$tmpOrder) . ' ' . $this->order[1];
+			}
+			else
+			{
+				$this->query .= ' ORDER BY ' . $this->_validateColum($this->table , $this->order[0]) . ' ' .$this->order[1];
+			}
 		}
 
 		return $this->query;
-
 	}
 
 
