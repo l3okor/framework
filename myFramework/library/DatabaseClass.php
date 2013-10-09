@@ -236,7 +236,7 @@ class DatabaseClass extends PDO
 	{
 
 		//colums
-		if(empty($this->colums))
+		if(empty($this->columns))
 		{
 			$this->query .= ' * ';
 		}
@@ -246,25 +246,24 @@ class DatabaseClass extends PDO
 			//select columns
 			$tmpColums = array();
 			$match = '';
-			foreach ($this->colums as $key => $value)
+			foreach ($this->columns as $key => $value)
 			{
-				$tmpColums[] = $this->_validateColum($this->table,$value,$key);
+				$tmpColums[] = $this->_validateColumn($this->table,$value,$key);
 
 			}
 
 			//add columns from join
-			if (!empty($this->joins))
+			if (! empty ( $this->joins ))
 			{
-				foreach ($this->joins as $join)
+				foreach ( $this->joins as $join )
 				{
-					if(!empty($join['cols']))
+					if (! empty ( $join ['cols'] ))
 					{
-						foreach ($join['cols'] as $key => $value)
+						foreach ( $join ['cols'] as $key => $value )
 							$tmpColums[] = $this->_validateColum($join['table'],$value,$key);
 					}
 				}
 			}
-
 			$this->query .= ' ' . implode(', ', $tmpColums);
 		}
 		//table
@@ -274,14 +273,14 @@ class DatabaseClass extends PDO
 		//join Left and Right
 
 		if (!empty($this->joins))
-		{//var_dump($this->joins);
+		{
 			foreach ($this->joins as $join)
 			{
 				$this->query .= ' ' .$join['type'] . ' JOIN ' . $join['table'] . ' ' . ' ON ' . $join['clause'];
 			}
 		}
 
-		//wheres
+		//where
 
 		if(!empty($this->where))
 		{
@@ -302,7 +301,7 @@ class DatabaseClass extends PDO
 		{
 			foreach ($this->group as $group)
 			{
-				$tmpGroup[] = $this->_validateColum($this->table,$group);
+				$tmpGroup[] = $this->_validateColumn($this->table,$group);
 			}
 
 			$this->query .= ' GROUP BY ' . implode(', ', $tmpGroup);
@@ -315,13 +314,13 @@ class DatabaseClass extends PDO
 			{
 				foreach ($this->order[0] as $col)
 				{
-					$tmpOrder = $this->_validateColum($this->table,$col);
+					$tmpOrder = $this->_validateColumn($this->table,$col);
 				}
 				$this->query .= ' ORDER BY ' . implode(',',$tmpOrder) . ' ' . $this->order[1];
 			}
 			else
 			{
-				$this->query .= ' ORDER BY ' . $this->_validateColum($this->table , $this->order[0]) . ' ' .$this->order[1];
+				$this->query .= ' ORDER BY ' . $this->_validateColumn($this->table , $this->order[0]) . ' ' .$this->order[1];
 			}
 		}
 
