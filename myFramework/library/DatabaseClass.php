@@ -83,6 +83,26 @@ class DatabaseClass extends PDO
 		return $this;
 	}
 
+	public function joinLeft($table, $clause, $cols = array())
+	{
+		$this->joins[] = array('type' => '' , 'table' => $table, 'clause' => $clause, 'cols' => $cols);
+		return $this;
+	}
+
+
+	public function joinRight($table, $clause, $cols = array())
+	{
+		$this->joins[] = array('type' => '' , 'table' => $table, 'clause' => $clause, 'cols' => $cols);
+		return $this;
+	}
+
+
+	public function join($table, $clause, $cols = array())
+	{
+		$this->joins[] = array('type' => '', 'table' => $table, 'clause' => $clause, 'cols' => $cols);
+		return $this;
+	}
+
 	public function update ($table, $cols = array(), $clause)
 	{
 		$updateQuery = '';
@@ -137,25 +157,7 @@ class DatabaseClass extends PDO
 			$stmt->execute();
 	}
 
-	public function joinLeft($table, $clause, $cols = array())
-	{
-		$this->joins[] = array('type' => '' , 'table' => $table, 'clause' => $clause, 'cols' => $cols);
-		return $this;
-	}
 
-
-	public function joinRight($table, $clause, $cols = array())
-	{
-		$this->joins[] = array('type' => '' , 'table' => $table, 'clause' => $clause, 'cols' => $cols);
-		return $this;
-	}
-
-
-	public function join($table, $clause, $cols = array())
-	{
-		$this->joins[] = array('type' => '', 'table' => $table, 'clause' => $clause, 'cols' => $cols);
-		return $this;
-	}
 
 	public function _validateColumn($table, $col, $as = NULL)
 	{
@@ -204,38 +206,20 @@ class DatabaseClass extends PDO
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-// 	private function _buildQuery()
-// 	{
-// 		$this->query .=' * ';
-// 		$this->query .=' FROM ' . $this->table;
-// 		if (!empty($this->where))
-// 		{
-// 			foreach ($this->where as $where)
-// 			{
-// 				$this->whereValue = $where[1];
-// 				$whereClause[] = $where[0];
-// 			}
-// 			$this->query .=' WHERE ' . implode(' AND ', $whereClause);
-// 		}
-
-// 		if (!empty($this->group))
-// 		{
-// 			$this->query .= ' GROUP BY ' . implode(', ', $this->group);
-// 		}
-
-// 		if (!empty($this->order))
-// 		{
-// 			$this->query .= ' ORDER BY ' . $this->order;
-// 		}
-
-// 		return $this->query;
-
-// 	}
-
 	private function _buildQuery()
 	{
 
-		//colums
+		//columns
+
+		/**
+		 * ok, it goes like this.
+		 * we build the query by concatenating the initial query string which now only contains the word 'SELECT' with
+		 * the following:
+		 *
+		 * we validate if the columns are empty. if they are, we only use * as for
+		 * select * from
+		 */
+
 		if(empty($this->columns))
 		{
 			$this->query .= ' * ';
@@ -243,7 +227,10 @@ class DatabaseClass extends PDO
 		else
 		{
 
-			//select columns
+
+		/**
+		 *else we select and validate the columns.
+		 */
 			$tmpColums = array();
 			$match = '';
 			foreach ($this->columns as $key => $value)
@@ -252,25 +239,41 @@ class DatabaseClass extends PDO
 
 			}
 
-			//add columns from join
-			if (! empty ( $this->joins ))
+		/**
+		 * if we have a join, we add columns from that join.
+		 *
+		 */
+
+			if (!empty ( $this->joins ))
 			{
-				foreach ( $this->joins as $join )
+				foreach ( $this->joins as $join )/**  we cycle the joins.  */
 				{
 					if (! empty ( $join ['cols'] ))
 					{
-						foreach ( $join ['cols'] as $key => $value )
+						foreach ( $join ['cols'] as $key => $value )/** and we validate  */
 							$tmpColums[] = $this->_validateColum($join['table'],$value,$key);
 					}
 				}
 			}
 			$this->query .= ' ' . implode(', ', $tmpColums);
+
+		/**
+		 * we implode the string so we can concatenate it with the query
+		 */
+
 		}
-		//table
+
+
+		/**
+		 * we select the table.
+		 */
 
 		$this->query .= ' FROM ' . $this->table;
 
-		//join Left and Right
+
+		/**
+		 * and here we make the join
+		 */
 
 		if (!empty($this->joins))
 		{
@@ -280,7 +283,10 @@ class DatabaseClass extends PDO
 			}
 		}
 
-		//where
+
+		/**
+		 * where clause of the query
+		 */
 
 		if(!empty($this->where))
 		{
@@ -292,10 +298,9 @@ class DatabaseClass extends PDO
 			$this->query .= ' WHERE ' . implode(' AND ', $whereClauseArray);
 		}
 
-
-		//or wheres
-
-		//group
+		/**
+		 *  group for the query. same thing. validate columns and concatenate
+		 */
 
 		if (!empty($this->group))
 		{
@@ -306,7 +311,12 @@ class DatabaseClass extends PDO
 
 			$this->query .= ' GROUP BY ' . implode(', ', $tmpGroup);
 		}
-		//order
+
+		/**
+		 * order by.
+		 * order[0] is the name of the column
+		 * order[1] is ASC/DSC.
+		 */
 
 		if(!empty($this->order))
 		{
