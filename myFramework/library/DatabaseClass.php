@@ -155,10 +155,11 @@ class DatabaseClass extends PDO
 
 			$stmt = $this->dbh->prepare($deleteQuery);
 			$stmt->execute();
+
 	}
 
 
-	public function _validateColumn($table, $col, $as = NULL)
+	public function validateColumn($table, $col, $as = NULL)
 	{
 		if ((!is_null ($as)) && (is_string($as)) && ($as !== ''))
 		{
@@ -188,7 +189,7 @@ class DatabaseClass extends PDO
 
 	public function fetch()
 	{
-		$this->_buildQuery();
+		$this->buildQuery();
 		$stmt = $this->dbh->prepare($this->query);
 		if ($this->whereValue != NULL)
 		{
@@ -201,7 +202,7 @@ class DatabaseClass extends PDO
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	private function _buildQuery()
+	private function buildQuery()
 	{
 
 		//columns
@@ -223,19 +224,18 @@ class DatabaseClass extends PDO
 		{
 
 		/**
-		 *else we select and validate the columns.
+		 * else we select and validate the columns.
 		 */
 			$tmpColums = array();
 			$match = '';
 			foreach ($this->columns as $key => $value)
 			{
-				$tmpColums[] = $this->_validateColumn($this->table,$value,$key);
+				$tmpColums[] = $this->validateColumn($this->table,$value,$key);
 
 			}
 
 		/**
 		 * if we have a join, we add columns from that join.
-		 *
 		 */
 
 			if (!empty ( $this->joins ))
@@ -245,7 +245,7 @@ class DatabaseClass extends PDO
 					if (! empty ( $join ['cols'] ))
 					{
 						foreach ( $join ['cols'] as $key => $value )/** and we validate  */
-							$tmpColums[] = $this->_validateColumn($join['table'],$value,$key);
+							$tmpColums[] = $this->validateColumn($join['table'],$value,$key);
 					}
 				}
 			}
@@ -292,14 +292,14 @@ class DatabaseClass extends PDO
 		}
 
 		/**
-		 *  group for the query. same thing. validate columns and concatenate
+		 * group for the query. same thing. validate columns and concatenate
 		 */
 
 		if (!empty($this->group))
 		{
 			foreach ($this->group as $group)
 			{
-				$tmpGroup[] = $this->_validateColumn($this->table,$group);
+				$tmpGroup[] = $this->validateColumn($this->table,$group);
 			}
 
 			$this->query .= ' GROUP BY ' . implode(', ', $tmpGroup);
@@ -317,16 +317,22 @@ class DatabaseClass extends PDO
 			{
 				foreach ($this->order[0] as $col)
 				{
-					$tmpOrder = $this->_validateColumn($this->table,$col);
+					$tmpOrder = $this->validateColumn($this->table,$col);
 				}
 				$this->query .= ' ORDER BY ' . implode(',',$tmpOrder) . ' ' . $this->order[1];
 			}
 			else
 			{
-				$this->query .= ' ORDER BY ' . $this->_validateColumn($this->table , $this->order[0]) . ' ' .$this->order[1];
+				$this->query .= ' ORDER BY ' . $this->validateColumn($this->table , $this->order[0]) . ' ' .$this->order[1];
 			}
 		}
 		return $this->query;
+	}
+
+	public function closeConnection()
+	{
+		$this->dbh=NULL;
+		return $this;
 	}
 
 }
