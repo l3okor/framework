@@ -8,10 +8,10 @@
 class DatabaseClass extends PDO
 {
 
-	private $host   ='localhost';
-	private $user   ='root';
-	private $pass   ='1234';
-	private $dbname ='test_db';
+	private $host   = 'localhost';
+	private $user   = 'root';
+	private $pass   = '1234';
+	private $dbname = 'test_db';
 
 	private $dbh;
 	private $error;
@@ -158,7 +158,6 @@ class DatabaseClass extends PDO
 	}
 
 
-
 	public function _validateColumn($table, $col, $as = NULL)
 	{
 		if ((!is_null ($as)) && (is_string($as)) && ($as !== ''))
@@ -186,10 +185,6 @@ class DatabaseClass extends PDO
 		}
 		return $col;
 	}
-
-
-
-
 
 	public function fetch()
 	{
@@ -227,7 +222,6 @@ class DatabaseClass extends PDO
 		else
 		{
 
-
 		/**
 		 *else we select and validate the columns.
 		 */
@@ -251,7 +245,7 @@ class DatabaseClass extends PDO
 					if (! empty ( $join ['cols'] ))
 					{
 						foreach ( $join ['cols'] as $key => $value )/** and we validate  */
-							$tmpColums[] = $this->_validateColum($join['table'],$value,$key);
+							$tmpColums[] = $this->_validateColumn($join['table'],$value,$key);
 					}
 				}
 			}
@@ -260,7 +254,6 @@ class DatabaseClass extends PDO
 		/**
 		 * we implode the string so we can concatenate it with the query
 		 */
-
 		}
 
 
@@ -292,10 +285,10 @@ class DatabaseClass extends PDO
 		{
 			foreach ($this->where as $where)
 			{
-				$this->whereValuesArray[] = $where[1];
-				$whereClauseArray[] = $where[0];
+				$this->whereValue[] = $where[1];
+				$whereArray[] = $where[0];
 			}
-			$this->query .= ' WHERE ' . implode(' AND ', $whereClauseArray);
+			$this->query .= ' WHERE ' . implode(' AND ', $whereArray);
 		}
 
 		/**
@@ -315,7 +308,7 @@ class DatabaseClass extends PDO
 		/**
 		 * order by.
 		 * order[0] is the name of the column
-		 * order[1] is ASC/DSC.
+		 * order[1] is ASC/DSC. no need to be uppercase. got strtoupper to do that.
 		 */
 
 		if(!empty($this->order))
@@ -333,10 +326,7 @@ class DatabaseClass extends PDO
 				$this->query .= ' ORDER BY ' . $this->_validateColumn($this->table , $this->order[0]) . ' ' .$this->order[1];
 			}
 		}
-
 		return $this->query;
 	}
-
-
 
 }
