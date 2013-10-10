@@ -205,14 +205,13 @@ class DatabaseClass extends PDO
 	private function buildQuery()
 	{
 
-		//columns
 
 		/**
 		 * ok, it goes like this.
 		 * we build the query by concatenating the initial query string which now only contains the word 'SELECT' with
 		 * the following:
 		 *
-		 * we validate if the columns are empty. if they are, we only use * as for
+		 * we check if the columns are empty. if they are, we only use * as for
 		 * select * from
 		 */
 
