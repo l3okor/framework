@@ -195,7 +195,6 @@ class DatabaseClass
 	public function fetchAll()
 	{
 		$this->buildQuery();
-		exit;
 		$stmt = $this->dbh->prepare($this->query);
 		if ($this->whereValue != NULL)
 		{
@@ -205,7 +204,7 @@ class DatabaseClass
 		{
 			$stmt->execute();
 		}
-		return $stmt->fetchAll();
+		return $stmt->fetchAll(Pdo::FETCH_ASSOC);
 	}
 
 	/**
