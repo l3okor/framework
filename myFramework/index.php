@@ -1,9 +1,11 @@
 <?php
 date_default_timezone_set('Europe/Bucharest');
 require_once 'autoloader/Autoloader.php';
-require_once 'library/DatabaseClass.php';
+//require_once 'library/DatabaseClass.php';
 
-$db = new DatabaseClass('test_db', 'root', '1234', 'localhost' );
+$db = new DatabaseClass('localhost', 'test_db', 'root', '1234');
+
+$db->select()->from('car')->where('numeProdus LIKE %?%', 'Dacia');
 
 // $newVar= array('animal_type' =>'dasda', 'animal_name' => 'cfafa');
 // $db->Insert($newVar, 'animals');

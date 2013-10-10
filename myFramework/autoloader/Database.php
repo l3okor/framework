@@ -249,10 +249,10 @@ class Database {
 		}
 		$this->arrayedResult = array();
 
-		while ($data = mysql_fetch_assoc($this->result))
-		{
-			$this->arrayedResult[] = $data;
-		}
+// 		while ($data = mysql_fetch_assoc($this->result))
+// 		{
+// 			$this->arrayedResult[] = $data;
+// 		}
 
 		return $this->arrayedResult;
 	}

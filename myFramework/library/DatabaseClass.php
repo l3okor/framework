@@ -5,13 +5,13 @@
  * @author Stef
  */
 
-class DatabaseClass extends PDO
+class DatabaseClass
 {
 
-	private $host   = 'localhost';
+	/*private $host   = 'localhost';
 	private $user   = 'root';
 	private $pass   = '1234';
-	private $dbname = 'test_db';
+	private $dbname = 'test_db';*/
 
 	private $dbh;
 	private $error;
@@ -27,8 +27,13 @@ class DatabaseClass extends PDO
 	private $joins;
 
 
-	public function __construct()
+	public function __construct($host, $database, $user, $pass)
 	{
+
+		$this->host = $host;
+		$this->dbname = $database;
+		$this->user = $user;
+		$this->pass = $pass;
 
 		$dsn= 'mysql:host=' . $this->host . ';dbname=' . $this->dbname;
 		$options = array(
@@ -85,14 +90,14 @@ class DatabaseClass extends PDO
 
 	public function joinLeft($table, $clause, $cols = array())
 	{
-		$this->joins[] = array('type' => '' , 'table' => $table, 'clause' => $clause, 'cols' => $cols);
+		$this->joins[] = array('type' => 'left' , 'table' => $table, 'clause' => $clause, 'cols' => $cols);
 		return $this;
 	}
 
 
 	public function joinRight($table, $clause, $cols = array())
 	{
-		$this->joins[] = array('type' => '' , 'table' => $table, 'clause' => $clause, 'cols' => $cols);
+		$this->joins[] = array('type' => 'right' , 'table' => $table, 'clause' => $clause, 'cols' => $cols);
 		return $this;
 	}
 
@@ -187,9 +192,10 @@ class DatabaseClass extends PDO
 		return $col;
 	}
 
-	public function fetch()
+	public function fetchAll()
 	{
 		$this->buildQuery();
+		exit;
 		$stmt = $this->dbh->prepare($this->query);
 		if ($this->whereValue != NULL)
 		{
@@ -199,9 +205,14 @@ class DatabaseClass extends PDO
 		{
 			$stmt->execute();
 		}
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $stmt->fetchAll();
 	}
 
+	/**
+	 * Creates SQL String query
+	 *
+	 * @return string
+	 */
 	private function buildQuery()
 	{
 
@@ -271,7 +282,7 @@ class DatabaseClass extends PDO
 		{
 			foreach ($this->joins as $join)
 			{
-				$this->query .= ' ' .$join['type'] . ' JOIN ' . $join['table'] . ' ' . ' ON ' . $join['clause'];
+				$this->query .= ' ' .strtoupper($join['type']) . ' JOIN ' . $join['table'] . ' ' . ' ON ' . $join['clause'];
 			}
 		}
 
@@ -325,6 +336,9 @@ class DatabaseClass extends PDO
 				$this->query .= ' ORDER BY ' . $this->validateColumn($this->table , $this->order[0]) . ' ' .$this->order[1];
 			}
 		}
+
+		echo $this->query;
+
 		return $this->query;
 	}
 
