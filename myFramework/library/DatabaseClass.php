@@ -204,7 +204,7 @@ class DatabaseClass
 		{
 			$stmt->execute();
 		}
-		return $stmt->fetchAll(Pdo::FETCH_ASSOC);
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	/**
@@ -345,6 +345,13 @@ class DatabaseClass
 	{
 		$this->dbh=NULL;
 		return $this;
+	}
+
+	public function printData($data)
+	{
+		echo '<pre>';
+		print_r($data);
+		echo '</pre>';
 	}
 
 }
