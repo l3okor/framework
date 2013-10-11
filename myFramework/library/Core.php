@@ -30,6 +30,12 @@ class Core
 
 		$reqController =$modules[$reqModule];
 
+		if (isset($lnk[0]) && $lnk[0]!= '')
+		{
+			$reqController = $lnk[0];
+		}
+
+
 	}
 
 
