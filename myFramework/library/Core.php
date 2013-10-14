@@ -41,7 +41,19 @@ class Core
 
 	public static function route()
 	{
-
+		$registry = Registry::getInstance();
+		if (!empty($registry->controller))
+		{
+			$route = CONTROLLER_PATH . $registry->module . '/' . ucfirst($registry->controller) . 'Controller.php';
+			if (is_file($route))
+			{
+				$registry->route = $route;
+			}
+			else
+			{
+				echo 'Page not found.';
+			}
+		}
 	}
 
 
