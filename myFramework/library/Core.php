@@ -6,6 +6,9 @@ class Core
 		$registry= Registry::getInstance();
 		$db = new DatabaseClass(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 		$registry->database = $db;
+		$modules = array('admin' => 'admin', 'frontend' => 'page');
+		$registry->modules = $modules;
+		self::parseLink();
 
 		return $registry;
 
@@ -19,22 +22,6 @@ class Core
 
 		//strip whitespaces from beginning and end of a string
 		$lnk = explode('/', trim($tmpReq, '/'));
-		$reqModule = 'frontend';
-		$registry = Registry::getInstance();
-		$modules = Registry::get('modules');
-		if (in_array($lnk[0], array_keys($modules)))
-		{
-			$reqModule = $lnk[0];
-			array_shift($lnk);
-		}
-
-		$reqController =$modules[$reqModule];
-
-		if (isset($lnk[0]) && $lnk[0]!= '')
-		{
-			$reqController = $lnk[0];
-		}
-
 
 	}
 
