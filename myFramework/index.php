@@ -1,19 +1,11 @@
 <?php
 date_default_timezone_set('Europe/Bucharest');
-require_once 'autoloader/Autoloader.php';
-//require_once 'library/DatabaseClass.php';
+ini_set('display_errors', 1);
 
-$db = new DatabaseClass('localhost', 'test_db', 'root', '1234');
+define('CONFIG_PATH', 'config/config.php');
+require_once(CONFIG_PATH);
+require_once('/library/Autoloader.php');
+Autoloader::autoload(LIBRARY_PATH);
+Core::initialize();
+Core::route();
 
-Registry::set('database', $db);
-
-$db = Registry::getInstance()->database;
-
-$db->select()->from('client', array('id', 'numeClient'))
-			 ->join('car', 'car.id = client.modelMasinaId', array('carId' => 'id', 'numeProdus'));
-
-
-//$db->select('animals', 'animal_id=1');
-$data = $db->fetchAll();
-
-$db->printData($data);
