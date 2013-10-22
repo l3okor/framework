@@ -72,6 +72,14 @@ class Core
 		if (!empty($registry->controller))
 		{
 			self::loadControllerClasses();
+			require_once VIEW_PATH . $registry->module . '/View.php';
+
+			$tpl = View::getInstance();
+			$tpl->setRoot(TEMPLATES_PATH . $registry->module);
+			$tpl->setIndexTpl();
+
+			$pageTitle = '';
+
 			$route = CONTROLLER_PATH . $registry->module . '/' . ucfirst($registry->controller) . 'Controller.php';
 
 			if (is_file($route))
@@ -84,6 +92,13 @@ class Core
 			{
 				echo 'Page not found.';
 			}
+
+
+			$tpl->setPageTitle($pageTitle);
+			$tpl->setGlobals();
+			$tpl->parse('TPL_CONTENT', 'tpl_content');
+			$tpl->pparse('OUTPUT', 'tpl_index');
+
 		}
 		else{
 			echo 'Page not found';

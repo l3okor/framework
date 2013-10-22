@@ -1,14 +1,15 @@
 <?php
 
 $model = new Page();
-$view = new PageView();
+$view = new PageView($tpl);
 
 switch ($registry->action)
 {
 	default:
 	case 'about':
-
-		echo '<h1>Your in about page</h1>';
+		$pageTitle = 'About Us';
+		$clients = $model->getClients();
+		$view->showAboutPage($clients);
 
 	break;
 }

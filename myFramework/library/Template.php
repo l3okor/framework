@@ -27,14 +27,15 @@ class Template
 
 	public function setRoot($root)
 	{
-		if (strrpos($root, '/') === (strlen($root) - 1) )
+		if(strrpos($root,'/') !== (strlen($root)-1))
 		{
-			$root = substr($root, 0, -1);
+			$root = $root . '/';
 		}
 		if (is_dir($root))
 		{
 			$this->_rootPath=$root;
 		}
+
 	}
 
 /**
@@ -58,6 +59,7 @@ class Template
 		{
 			$pathVar = $this->_rootPath . $fileName;
 		}
+
 		if (file_exists($pathVar))
 		{
 			$this->_files[$varName] = $pathVar;
@@ -99,7 +101,7 @@ class Template
 
 		foreach ($this->_varKeys as $key => $value)
 		{
-			$temp = str_replace($value, $this->_varVals, $temp);
+			$temp = str_replace($value, $this->_varVals[$key], $temp);
 		}
 
 		return $temp;
@@ -107,16 +109,42 @@ class Template
 
 	public function parse($target, $varName, $append = false)
 	{
+		$block = $this->subst($varName);
 
+		if ($append == TRUE)
+		{
+			$this->setVar($target, $this->getVar($target) . $block);
+		}
+		else
+		{
+			$this->setVar($target, $block);
+		}
+		return $this->getVar($target);
 	}
 
 	public function pparse($target, $varName, $append = false)
 	{
-
+		print ($this->parse($target, $varName, $append));
 	}
 
 	public function setBlock($parent, $varName, $alias)
 	{
+		$temp = $this->getVar($parent);
 
+		$begin  = strpos($temp, '<!-- BEGIN ' . $varName . ' -->');
+		$end = strpos($temp, '<!-- END ' . $varName . ' -->');
+
+		if ($begin !== FALSE && $end !== FALSE)
+		{
+			$begin = $begin + strlen('<!-- BEGIN ' . $varName . ' -->');
+			$block = substr($temp, $begin, $end - $begin);
+			$this->setVar($varName, $block);
+			$temp  = str_replace('<!-- BEGIN ' . $varName . ' -->' . $block . '<!-- END ' . $varName . ' -->', '{' . $alias . '}', $temp);
+			$this->setVar($parent, $temp);
+		}
+		else
+		{
+			$this->setVar($parent, "Block $varName was not found");
+		}
 	}
 }
