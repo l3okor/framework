@@ -113,6 +113,18 @@ class Registry {
 
 	}
 
+	public function __isset($key)
+	{
+		if (is_null(self::$_instance))
+		{
+			return false;
+		}
+		else
+		{
+			return isset($this->_objects[$key]);
+		}
+	}
+
 
 
 }

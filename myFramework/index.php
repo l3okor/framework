@@ -6,6 +6,7 @@ define('CONFIG_PATH', 'config/config.php');
 require_once(CONFIG_PATH);
 require_once('/library/Autoloader.php');
 Autoloader::autoload(LIBRARY_PATH);
+
 Core::initialize();
 Core::route();
 

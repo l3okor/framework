@@ -2,6 +2,11 @@
 
 class Admin extends Model
 {
+	public function __construct()
+	{
+		parent::__construct();
+	}
+
 	public function getAdmin($admin, $pass )
 	{
 		$this->db->select()
