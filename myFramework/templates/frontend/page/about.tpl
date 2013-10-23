@@ -4,16 +4,17 @@
 <h3>Clients</h3>
 <table>
 <thead>
-	<th>#<th>
+	<th>#</th>
 	<th>Name</th>
 	<th>Car model</th>
 </thead>
 <tbody>
 <!-- BEGIN clients -->
 <tr>
-	<td>{CLIENT_ID}</td>
-	<td>{CLIENT_NAME}</td>
-	<td>{CLIENT_CAR}</td>
+	<!-- BEGIN cells -->
+		<td>{CELL_DATA}</td>
+	<!-- END cells -->
+
 </tr>
 <!-- END clients -->
 </tbody>
