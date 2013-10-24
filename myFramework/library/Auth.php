@@ -2,8 +2,6 @@
 
 class Auth
 {
-
-
 	public static function isUserLogged()
 	{
 		if (empty($_SESSION['user']))
@@ -39,6 +37,4 @@ class Auth
 			exit;
 		}
 	}
-
-
 }
