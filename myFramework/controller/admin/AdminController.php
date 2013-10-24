@@ -21,7 +21,7 @@ switch ($registry->action)
 	case 'verifylogin' :
 		if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
-			if ((!empty($_POST['username'])) && (!empty($POST['password'])))
+			if ((!empty($_POST['username'])) && (!empty($_POST['password'])))
 			{
 				$username = $_POST['username'];
 				$password = $_POST['password'];
@@ -52,7 +52,7 @@ switch ($registry->action)
 		break;
 	case 'logout':
 		unset($_SESSION['admin']);
-		header('Location:' .SITE_URL . 'admin/admin/login');
+		header('Location:' . SITE_URL . 'admin/admin/login');
 		exit;
 		break;
 }
