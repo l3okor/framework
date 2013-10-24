@@ -1,6 +1,6 @@
 <?php
 
-class AdminView
+class UserView
 {
 	public function __construct(Template $tpl)
 	{

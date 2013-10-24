@@ -8,14 +8,13 @@ switch ($registry->action)
 	default:
 
 	case 'login':
-		if (empty($_SESSION['admin']))
-		{
-			$adminView->loginPage();
-		}
-		else
+		if (Auth::isAdminLogged())
 		{
 			header('Location: ' . SITE_URL . 'admin/admin/');
+			exit;
 		}
+
+		$adminView->loginPage();
 		break;
 
 	case 'verifylogin' :
@@ -31,7 +30,7 @@ switch ($registry->action)
 					$_SESSION['admin'] = $admin[0];
 					$_SESSION['msg']['type'] = 'info';
 					$_SESSION['msg']['text'] = 'Admin Logged!';
-					header('Location:' . SITE_URL . '/admin/admin');
+					header('Location:' . SITE_URL . '/admin/admin/list');
 					exit;
 				}
 				else

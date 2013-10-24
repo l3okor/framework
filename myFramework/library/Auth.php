@@ -15,7 +15,7 @@ class Auth
 	{
 		if (!self::isUserLogged())
 		{
-			header('location: ' . SITE_URL . '/frontend');
+			header('location: ' . SITE_URL . '/user/login');
 			exit;
 		}
 	}
@@ -33,7 +33,7 @@ class Auth
 	{
 		if (!self::isAdminLogged())
 		{
-			header('location: ' . SITE_URL . '/admin/admin');
+			header('location: ' . SITE_URL . '/admin/admin/login');
 			exit;
 		}
 	}
