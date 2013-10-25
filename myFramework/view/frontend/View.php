@@ -23,18 +23,26 @@ class View extends Template{
 	{
 		if (isset($_SESSION['msg']))
 		{
-			$messages = $_SESSION['text'];
+			$messages = $_SESSION['msg']['text'];
+
 			if (!is_array($messages))
 				$messages = array($messages);
-			$this->setFile('MESSAGES', 'messages.tpl');
-			$this->setBlock('MESSAGES', 'list', '_list');
+			$this->setFile('tpl_messages', 'blocks/messages.tpl');
+			$this->setVar('MSG_TYPE', $_SESSION['msg']['type']);
+			$this->setBlock('tpl_messages', 'list', '_list');
 			foreach ($messages as $list)
 			{
-				$this->setVar('LIST', $list);
+				$this->setVar('MESSAGE', $list);
 				$this->parse('_list', 'list', TRUE);
 
 			}
-
+			$this->parse('MESSAGES', 'tpl_messages');
+			unset($_SESSION['msg']);
+		}
+		else
+		{
+		 	$this->setVar('MSG_TYPE', '');
+		 	$this->setVar('MESSAGES', '');
 		}
 	}
 

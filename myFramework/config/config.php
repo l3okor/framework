@@ -7,6 +7,7 @@ define('TEMPLATES_PATH','templates/');
 define('VIEW_PATH','view/');
 
 
+
 //Database parameters
 define('DB_HOST','localhost');
 define('DB_USER','root');

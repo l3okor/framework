@@ -6,6 +6,7 @@ $model = new User();
 switch ($registry->action)
 {
 	case 'login':
+		$pageTitle = 'User Login';
 		if (Auth::isUserLogged())
 		{
 			header('Location: ' . SITE_URL . '/user');
@@ -71,10 +72,8 @@ switch ($registry->action)
 
 	default:
 	case 'account':
-
+		$pageTitle = 'My Account';
 		Auth::checkIsUserLogged();
-
-		echo 'You account';
 
 
 	break;
