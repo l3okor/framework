@@ -18,4 +18,24 @@ class View extends Template{
 	{
 		$this->setVar('PAGE_TITLE', $pageTitle);
 	}
+
+	public function displayMessages()
+	{
+		if (isset($_SESSION['msg']))
+		{
+			$messages = $_SESSION['text'];
+			if (!is_array($messages))
+				$messages = array($messages);
+			$this->setFile('MESSAGES', 'messages.tpl');
+			$this->setBlock('MESSAGES', 'list', '_list');
+			foreach ($messages as $list)
+			{
+				$this->setVar('LIST', $list);
+				$this->parse('_list', 'list', TRUE);
+
+			}
+
+		}
+	}
+
 }

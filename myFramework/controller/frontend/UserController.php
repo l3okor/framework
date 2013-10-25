@@ -39,6 +39,7 @@ switch ($registry->action)
 			{
 				$_SESSION['msg']['type'] = 'error';
 				$_SESSION['msg']['text'] = $errors;
+
 				header('Location:' . SITE_URL . '/user/login');
 				exit;
 			}
@@ -51,6 +52,7 @@ switch ($registry->action)
 					$_SESSION['user'] = $user[0];
 					$_SESSION['msg']['type'] = 'info';
 					$_SESSION['msg']['text'] = 'User Logged!';
+
 					header('Location:' . SITE_URL . '/user');
 					exit;
 				}
@@ -58,6 +60,7 @@ switch ($registry->action)
 				{
 					$_SESSION['msg']['type'] = 'error';
 					$_SESSION['msg']['text'] = 'Wrong Login.';
+
 					header('Location:' . SITE_URL . '/user/login');
 					exit;
 				}
@@ -68,8 +71,10 @@ switch ($registry->action)
 
 	default:
 	case 'account':
+
 		Auth::checkIsUserLogged();
 
+		echo 'You account';
 
 
 	break;
@@ -79,4 +84,6 @@ switch ($registry->action)
 		header('Location:' . SITE_URL . '/user/login');
 		exit;
 		break;
+
 }
+

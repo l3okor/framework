@@ -336,8 +336,6 @@ class DatabaseClass
 			}
 		}
 
-		echo $this->query;
-
 		return $this->query;
 	}
 

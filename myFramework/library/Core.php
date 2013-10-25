@@ -96,6 +96,7 @@ class Core
 
 			$tpl->setPageTitle($pageTitle);
 			$tpl->setGlobals();
+
 			$tpl->parse('TPL_CONTENT', 'tpl_content');
 			$tpl->pparse('OUTPUT', 'tpl_index');
 

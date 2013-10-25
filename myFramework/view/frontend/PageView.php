@@ -10,7 +10,6 @@ class PageView
 	public function showAboutPage($data)
 	{
 		$this->tpl->setFile('tpl_content', 'page/about.tpl');
-		$this->tpl->setVar('TITLE', 'About Us');
 		$this->tpl->setVar('MESSAGE', 'World');
 		$this->tpl->setBlock('tpl_content', 'clients', '_clients');
 		$this->tpl->setBlock('clients', 'cells','_cells');
