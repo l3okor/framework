@@ -2,6 +2,7 @@
 <head>
 	<title>{SITE_TITLE}</title>
 	<link rel="stylesheet" href="{SITE_URL}/templates/css/frontend/style.css">
+
 </head>
 
 <body>

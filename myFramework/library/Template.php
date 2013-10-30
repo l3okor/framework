@@ -111,6 +111,8 @@ class Template
 	{
 		$block = $this->subst($varName);
 
+		$block = preg_replace('/{[A-Za-z0-9_]+}/', '', $block);
+
 		if ($append == TRUE)
 		{
 			$this->setVar($target, $this->getVar($target) . $block);

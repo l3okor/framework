@@ -74,6 +74,9 @@ switch ($registry->action)
 	case 'account':
 		$pageTitle = 'My Account';
 		Auth::checkIsUserLogged();
+		$jojo = $model->getUser($_POST['username'], $_POST['password']);
+		var_dump($jojo);
+		$view->myAccountPage();
 
 
 	break;
@@ -82,6 +85,80 @@ switch ($registry->action)
 		unset($_SESSION['user']);
 		header('Location:' . SITE_URL . '/user/login');
 		exit;
+		break;
+
+	case 'register' :
+		$error = array();
+		$pageTitle = 'Register User';
+
+		$data = isset($_SESSION['registerData']) ? $_SESSION['registerData'] : array();
+		unset($_SESSION['registerData']);
+
+		if ($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
+			if (($_POST['confirmpassword'] != $_POST['password']) )
+			{
+				$error[] = 'Passwords do not match';
+			}
+
+			if (empty($_POST['password']))
+			{
+				$error[]='Password must not be empty!';
+			}
+			if (empty($_POST['username']))
+			{
+				$error[]='Username must not be empty!';
+			}
+			if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) === FALSE)
+			{
+				$error[]='Email not valid!';
+			}
+
+			if (!empty($error))
+			{
+				$_SESSION['msg']['type'] = 'error';
+				$_SESSION['msg']['text'] = $error;
+
+				$_SESSION['registerData'] = $_POST;
+				unset($_SESSION['registerData']['password']);
+				unset($_SESSION['registerData']['confirmpassword']);
+
+				header('Location: ' . SITE_URL . '/user/register');
+				exit;
+			}
+			else
+			{
+				$_SESSION['msg']['type'] = 'info';
+				$_SESSION['msg']['text'] = 'User registered';
+
+				$id = $model->registerUser($_POST);
+
+				if($id === false)
+				{
+					$_SESSION['msg']['type'] = 'error';
+					$_SESSION['msg']['text'] = 'Register unsuccessfull. Internal error/username/email already taken';
+
+					$_SESSION['registerData'] = $_POST;
+					unset($_SESSION['registerData']['password']);
+					unset($_SESSION['registerData']['confirmpassword']);
+
+					header('Location: ' . SITE_URL . '/user/register');
+					exit;
+
+				}
+				else{
+					$user = $model->getUserById($id);
+					$_SESSION['user'] = $user;
+				}
+
+
+				header('Location: ' . SITE_URL . '/user');
+				exit;
+			}
+
+		}
+
+		$view->registerPage($data);
 		break;
 
 }

@@ -51,6 +51,11 @@ class DatabaseClass
 
 	}
 
+	public function lastInsertId()
+	{
+		return $this->dbh->lastInsertId();
+	}
+
 
 	public function select()
 	{
@@ -140,6 +145,7 @@ class DatabaseClass
 			$insertQuery .='? ,';
 		}
 		$insertQuery = substr($insertQuery, 0, -1);
+		$insertQuery .= ')';
 		$stmt = $this->dbh->prepare($insertQuery);
 		$stmt->execute(array_values($cols));
 	}
