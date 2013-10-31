@@ -38,4 +38,16 @@ class User extends Model
 			return false;
 		}
 	}
+
+	public function updateUser($data, $id)
+	{
+		try{
+
+			 $this->db->update('user', $data, 'id = ' . $id);
+
+		}
+		catch (Exception $e){
+			return false;
+		}
+	}
 }

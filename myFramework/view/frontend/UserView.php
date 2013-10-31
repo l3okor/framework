@@ -25,19 +25,24 @@ class UserView extends Template
 
 		if (!empty($data))
 		{
-			// checked. pana aici merge. primeste $data-ul
+		
 			$this->tpl->setVar('USERNAME', $data['username']);
 			$this->tpl->setVar('EMAIL', $data['email']);
 			$this->tpl->setVar('NAME', $data['name']);
 			$this->tpl->setVar('SURNAME', $data['surname']);
-			//Core::debug($data);
+	
 		}
 		$this->tpl->parse('index.tpl', 'tpl_content');
 	}
 
-	public function myAccountPage()
+	public function myAccountPage($data)
 	{
 		$this->tpl->setFile('tpl_content', 'user/myaccount.tpl');
+		$this->tpl->setVar('USERNAME', $data['username']);
+		$this->tpl->setVar('EMAIL', $data['email']);
+		$this->tpl->setVar('NAME',$data['firstName']);
+		$this->tpl->setVar('SURNAME', $data['lastName']);
+
 
 		$this->tpl->parse('index.tpl', 'tpl_content');
 

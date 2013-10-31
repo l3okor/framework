@@ -1,14 +1,9 @@
-<form action ="{SITE_URL}/user" method="post">
+<form action ="{SITE_URL}/user/account" method="post">
 
 <table>
 	<tr>
 		<td>Username:</td>
 		<td>{USERNAME}</td>
-	</tr>
-
-	<tr>
-		<td>Password:</td>
-		<td>{PASSWORD}</td>
 	</tr>
 
 	<tr>

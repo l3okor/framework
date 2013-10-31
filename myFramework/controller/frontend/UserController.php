@@ -74,9 +74,18 @@ switch ($registry->action)
 	case 'account':
 		$pageTitle = 'My Account';
 		Auth::checkIsUserLogged();
-		$jojo = $model->getUser($_POST['username'], $_POST['password']);
-		var_dump($jojo);
-		$view->myAccountPage();
+		//$user = $_SESSION['user'];
+
+		if ($_SERVER['REQUEST_METHOD']=='POST')
+		{
+			$firstName = $_POST['firstName'];
+			$lastName = $_POST['lastName'];
+
+			$model->updateUser(array('firstName' => $firstName, 'lastName' => $lastName), $_SESSION['user']['id']);
+
+		}
+		$user = $model->getUserById($_SESSION['user']['id']);
+		$view->myAccountPage($user);
 
 
 	break;
